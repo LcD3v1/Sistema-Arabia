@@ -39,11 +39,20 @@ export default function VendasPage() {
   const [pagamento, setPagamento] = useState<PagamentoVenda>('dinheiro')
   const [carrinho, setCarrinho] = useState<ItemCarrinho[]>([])
 
-  // Só tipos ativos e com saldo entram na lista de venda
+  /**
+   * Todo tipo ATIVO aparece na lista, mesmo sem saldo.
+   *
+   * Filtrar por `quantidade > 0` fazia um tipo recém-cadastrado em
+   * Configurações simplesmente não existir aqui, sem nada na tela explicando
+   * que faltava dar entrada no estoque. Agora ele aparece desabilitado, com o
+   * motivo escrito na própria opção.
+   */
   const vendaveis = useMemo(
-    () => (estoque ?? []).filter(e => e.ativo && e.quantidade > 0),
+    () => (estoque ?? []).filter(e => e.ativo),
     [estoque],
   )
+
+  const comEstoque = vendaveis.filter(e => e.quantidade > 0)
 
   /**
    * Saldo já comprometido pelo carrinho. Sem descontar isso, dá para adicionar
@@ -161,15 +170,23 @@ export default function VendasPage() {
             <label htmlFor="v-municao" className="block font-mono text-[10px] text-txt3 tracking-wider mb-1">MUNIÇÃO</label>
             <select id="v-municao" value={municaoId} onChange={e => setMunicaoId(e.target.value)} disabled={!canEdit} className={selectCls}>
               <option value="">Selecione a munição</option>
-              {vendaveis.map(e => (
-                <option key={e.municaoId} value={e.municaoId}>
-                  {e.nome} ({disponivelPara(e.municaoId)}) — {fmtMoeda(e.precoUnitario, e.moeda)}
-                </option>
-              ))}
+              {vendaveis.map(e => {
+                const livre = disponivelPara(e.municaoId)
+                return (
+                  <option key={e.municaoId} value={e.municaoId} disabled={livre <= 0}>
+                    {e.nome} ({livre}) — {fmtMoeda(e.precoUnitario, e.moeda)}
+                    {livre <= 0 && ' — sem estoque'}
+                  </option>
+                )
+              })}
             </select>
-            {vendaveis.length === 0 && (
+            {vendaveis.length === 0 ? (
               <p className="font-mono text-[10px] text-txt3 mt-1">
-                Nenhuma munição com estoque. Cadastre os tipos em Configurações e dê entrada no estoque.
+                Nenhum tipo de munição cadastrado. Cadastre em Configurações → Munição p/ Venda.
+              </p>
+            ) : comEstoque.length === 0 && (
+              <p className="font-mono text-[10px] text-txt3 mt-1">
+                Os tipos cadastrados estão sem estoque. Dê entrada em Vendas → Estoque de Munição.
               </p>
             )}
           </div>
