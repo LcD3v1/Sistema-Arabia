@@ -1,0 +1,18 @@
+{
+  "name": "sistema-arabia",
+  "version": "1.0.0",
+  "description": "Sistema de Gestão Operacional — Facção Arábia",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "cd frontend && npm run build && cd ../backend && npm run build",
+    "start": "cd backend && cross-env NODE_ENV=production node dist/index.js",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}

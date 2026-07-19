@@ -1,0 +1,28 @@
+# Dependências
+node_modules/
+**/node_modules/
+
+# Builds
+dist/
+**/dist/
+dist-ssr/
+
+# Variáveis de ambiente / segredos
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+serviceAccountKey.json
+
+# Dados e logs (NÃO versionar — contêm dados reais)
+data.json
+**/data.json
+*.log
+**/*.log
+
+# Tooling local
+.claude/
+.DS_Store
+*.local
