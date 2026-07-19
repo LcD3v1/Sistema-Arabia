@@ -9,8 +9,17 @@ import ArabiaEmblem from '@/components/ui/ArabiaEmblem'
 import api from '@/lib/axios'
 import { queryClient } from '@/lib/queryClient'
 
-const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml']
-const MAX_BYTES = 2 * 1024 * 1024
+// SVG fora de propósito: o `logoSchema` do backend recusa data-URLs de SVG
+// (podem carregar script). Oferecer aqui só produzia erro no fim do upload.
+const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/webp']
+/**
+ * Limite do arquivo de ORIGEM escolhido pelo usuário.
+ *
+ * Pode ser folgado porque a imagem é reduzida para 300px antes de subir
+ * (`resizeImage`): o que trafega e é gravado tem dezenas de KB, não 5MB.
+ * Quem limita o que chega ao servidor é o `logoSchema` do backend.
+ */
+const MAX_BYTES = 5 * 1024 * 1024
 
 function resizeImage(file: File, maxSize = 300): Promise<string> {
   return new Promise((resolve) => {
@@ -32,13 +41,6 @@ function resizeImage(file: File, maxSize = 300): Promise<string> {
 }
 
 function processImage(file: File): Promise<string> {
-  if (file.type === 'image/svg+xml') {
-    return new Promise((resolve) => {
-      const reader = new FileReader()
-      reader.onload = () => resolve(reader.result as string)
-      reader.readAsDataURL(file)
-    })
-  }
   return resizeImage(file)
 }
 
@@ -68,11 +70,11 @@ export default function LogoUploader({ currentLogo }: Props) {
 
   function validateAndSelect(file: File) {
     if (!ALLOWED_TYPES.includes(file.type)) {
-      triggerError('Formato inválido. Use PNG, JPG, WEBP ou SVG.')
+      triggerError('Formato inválido. Use PNG, JPG ou WEBP.')
       return
     }
     if (file.size > MAX_BYTES) {
-      triggerError('Imagem excede 2MB.')
+      triggerError('Imagem excede 5MB.')
       return
     }
     setSelectedFile(file)
@@ -161,11 +163,11 @@ export default function LogoUploader({ currentLogo }: Props) {
         <p className="font-mono text-sm text-txt2 mb-1">
           Arraste sua logo aqui ou clique para selecionar
         </p>
-        <p className="font-mono text-[10px] text-txt3">PNG, JPG, WEBP, SVG — máx 2MB</p>
+        <p className="font-mono text-[10px] text-txt3">PNG, JPG, WEBP — máx 5MB</p>
         <input
           ref={inputRef}
           type="file"
-          accept="image/png,image/jpeg,image/webp,image/svg+xml"
+          accept="image/png,image/jpeg,image/webp"
           onChange={handleInputChange}
           className="hidden"
         />
