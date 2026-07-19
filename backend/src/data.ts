@@ -11,7 +11,9 @@ const DATA_PATH = process.env.DATA_PATH
 const DEFAULT_DATA: ArabiaData = {
   membros: [],
   acoes: [],
-  qrus: ['QRU-1', 'QRU-2', 'QRU-3'],
+  // Ações e cargos começam vazios: são listas que cada facção define do seu
+  // jeito, e exemplos genéricos só davam trabalho de apagar na primeira vez.
+  qrus: [],
   recrutas: [],
   recCfg: {
     notaMinima: 7,
@@ -23,7 +25,7 @@ const DEFAULT_DATA: ArabiaData = {
     ],
   },
   patentes: ['Recruta', 'Soldado', 'Cabo', 'Sargento', 'Tenente', 'Capitao', 'Major', 'Coronel'],
-  cargos: ['Operador', 'Sniper', 'Medico de Campo', 'Lider de Esquadrao', 'Comandante'],
+  cargos: [],
   cargosPermissao: [],
   contas: [],
   bauItens: ['Municao', 'Colete', 'Kit Medico', 'Algema'],
