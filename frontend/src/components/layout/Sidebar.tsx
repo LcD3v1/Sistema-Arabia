@@ -122,7 +122,7 @@ export default function Sidebar() {
       <div className="sidebar-footer">
         <div className="status-dot" />
         <span className="footer-txt">ONLINE</span>
-        <span className="footer-ver">v2.0</span>
+        <span className="footer-ver">v3.0</span>
       </div>
     </aside>
   )

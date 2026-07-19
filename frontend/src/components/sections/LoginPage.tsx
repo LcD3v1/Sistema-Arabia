@@ -52,7 +52,7 @@ function LoginParticles() {
   )
 }
 
-const BOOT_TEXT = 'SISTEMA ARÁBIA v2.0 — AUTENTICAÇÃO REQUERIDA'
+const BOOT_TEXT = 'SISTEMA ARÁBIA v3.0 — AUTENTICAÇÃO REQUERIDA'
 
 export default function LoginPage() {
   const navigate = useNavigate()
